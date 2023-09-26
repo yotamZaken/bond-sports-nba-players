@@ -29,3 +29,8 @@ export type FetchedPlayersData = {
 }
 
 export type Players = Array<Player>;
+
+export enum ListTypes {
+    all = "all",
+    favorites = "favorites"
+}

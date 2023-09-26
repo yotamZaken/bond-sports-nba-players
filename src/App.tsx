@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import ListContainer from "./components/ListContainer";
+import ListContainer from "./components/list-container";
 import { PlayerProvider } from "./player-context";
 
 function App() {
