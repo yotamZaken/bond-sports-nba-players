@@ -1,39 +1,48 @@
 import React, { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
-import { Player, Players, ListTypes } from "./types";
+import { Player, Players } from "./types";
 import { find } from "lodash";
+import { colorClasses, isColorDark } from "./color-classes";
 
-//TODO:
-// Make listTypes into an enum
-type PlayerContextType = {
+interface PlayerContextType {
     apiURL: string;
-    allPlayers: Players;
-    setAllPlayers: Dispatch<SetStateAction<Players>>;
     favoritePlayers: Players;
     toggleFavorite: (player: Player) => void;
     searchText?: string;
     setSearchText: Dispatch<SetStateAction<string>>;
     filteredPlayers: Player[];
-    setFilteredPlayers: Dispatch<SetStateAction<Players>>;
-    listTypes: { all: string; favorites: string };
     currentPage: number;
     totalPages: number;
     setCurrentPage: Dispatch<SetStateAction<number>>;
-};
+    bgColorClass: string;
+    textColorClass: string;
+    generateRandomColor: () => void;
+    colorClasses: Array<string>;
+}
 
 const PlayerContext = createContext({} as PlayerContextType);
 
-export function PlayerProvider({ children }: { children: any }) {
+export default function PlayerProvider({ children }: { children: any }) {
     const apiURL = "https://www.balldontlie.io/api/v1/players";
-    // const listTypes = { all: ListTypes.all , favorites: ListTypes.favorites };
-    const listTypes = { all: "all" , favorites: "favorites" };
-    const [allPlayers, setAllPlayers] = useState([] as Players);
-    const [favoritePlayers, setFavoritePlayers] = useState([] as Players);
-    const [searchText, setSearchText] = useState('');
-    const [filteredPlayers, setFilteredPlayers] = useState<Player[]>(allPlayers);
 
-    // Pagination related state
+    const [favoritePlayers, setFavoritePlayers] = useState([] as Players);
+    const [filteredPlayers, setFilteredPlayers] = useState<Player[]>([] as Players);
+
+    const [searchText, setSearchText] = useState('');
+
     const [currentPage, setCurrentPage ] = useState(1);
     const [totalPages, setTotalPages] = useState(50);
+
+    const [bgColorClass, setBgColorClass] = useState<string>('#ffffff');
+    const [textColorClass, setTextColorClass] = useState<string>('#000000');
+
+    const generateRandomColor = () => {
+        const randomNumber = Math.floor(Math.random() * colorClasses.length);
+        const bgColorClass = colorClasses[randomNumber].slice()
+        const textColorClass = isColorDark(bgColorClass) ? 'text-[#ffffff]' : 'text-[#000000]';
+
+        setBgColorClass(bgColorClass);
+        setTextColorClass(textColorClass);
+    };
 
     useEffect(() => {
         const fetchPlayersData = async () => {
@@ -69,8 +78,24 @@ export function PlayerProvider({ children }: { children: any }) {
         }
     };
 
+    const contextValue = {
+        apiURL,
+        favoritePlayers,
+        toggleFavorite,
+        searchText,
+        setSearchText,
+        filteredPlayers,
+        currentPage,
+        setCurrentPage,
+        totalPages,
+        bgColorClass,
+        textColorClass,
+        generateRandomColor,
+        colorClasses
+    }
+
     return (
-        <PlayerContext.Provider value={{ apiURL, listTypes, allPlayers, favoritePlayers, setAllPlayers, toggleFavorite, searchText, setSearchText, filteredPlayers, setFilteredPlayers, currentPage, setCurrentPage, totalPages }}>
+        <PlayerContext.Provider value={contextValue}>
             {children}
         </PlayerContext.Provider>
     )

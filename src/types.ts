@@ -17,20 +17,4 @@ export type Player = {
     }
 }
 
-export type FetchedPlayersData = {
-    data: Array<Player>;
-    meta: {
-        total_pages: number;
-        current_page: number;
-        next_page: number;
-        per_page: number;
-        total_count: number;
-    },
-}
-
 export type Players = Array<Player>;
-
-export enum ListTypes {
-    all = "all",
-    favorites = "favorites"
-}

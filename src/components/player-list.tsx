@@ -4,44 +4,34 @@ import { usePlayerContext } from "../player-context";
 
 import clsx from "clsx";
 import InputSearch from "./input-search";
+import React from "react";
+import Pagination from "./pagination";
 
-//TODO:
-// Make listTypes into an enum
 type PlayerListProps = {
     title: string;
-    // listType: "all" | "favorites";
-    listType: string;
+    isFavoritesList: boolean;
     players: Players;
 }
 
-export default function PlayerList({ title, players, listType, }: PlayerListProps) {
-    const { filteredPlayers, favoritePlayers, listTypes, currentPage, setCurrentPage, totalPages } = usePlayerContext();
-
-    const handlePageChange = (pageNumber: number) => {
-        setCurrentPage(pageNumber);
-    }
+export default function PlayerList({ title, players, isFavoritesList, }: PlayerListProps) {
+    const { bgColorClass, textColorClass, generateRandomColor } = usePlayerContext();
 
     return (
-        <div className={clsx("border border-1 border-green-950 p-3 rounded", "grid grid-flow-row gap-y-3 p-3 content-start")}>
+        <div className={clsx("border border-1 border-green-950 p-3 rounded", "grid grid-flow-row gap-y-3 p-3 content-start", isFavoritesList && bgColorClass, isFavoritesList && textColorClass)}>
             <p className="font-bold"> { title } </p>
-             <InputSearch listType={listType} />
-            {listType === listTypes.all && filteredPlayers && filteredPlayers.map(player => (
-                <PlayerItem listType={listType} player={player} key={player.id + Math.random().toFixed(2)} />
-            ))}
-            {listType === listTypes.favorites && favoritePlayers && favoritePlayers.map(player => (
-                <PlayerItem listType={listType} player={player} key={player.id + Math.random().toFixed(2)} />
-            ))}
-            { listType === listTypes.all &&  <div className="grid grid-flow-col justify-between">
-                <button className={ clsx("border border-1 border-purple-400", currentPage === 1 && "text-gray-500") }
-                        onClick={ () => handlePageChange(currentPage - 1) } disabled={ currentPage === 1 }>
-                    Previous
+             <InputSearch isFavoritesList={isFavoritesList} />
+            { isFavoritesList && (
+                <button onClick={generateRandomColor}  >
+                    Change Background Color
                 </button>
-                <button
-                    className={ clsx("border border-1 border-purple-400", currentPage === totalPages && "text-gray-500") }
-                    onClick={ () => handlePageChange(currentPage + 1) } disabled={ currentPage === totalPages }>
-                    Next
-                </button>
-            </div> }
+            )}
+            { players.map(player => (
+                <PlayerItem
+                    player={player}
+                    isFavoritesList={isFavoritesList}
+                    key={player.id + Math.random().toFixed(2)} />
+            ))}
+            { !isFavoritesList &&  <Pagination /> }
         </div>
     )
 }
