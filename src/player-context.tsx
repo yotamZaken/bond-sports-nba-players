@@ -1,6 +1,6 @@
 import React, { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { Player, Players, ListTypes } from "./types";
-import { debounce, find } from "lodash";
+import { find } from "lodash";
 
 //TODO:
 // Make listTypes into an enum
@@ -15,6 +15,9 @@ type PlayerContextType = {
     filteredPlayers: Player[];
     setFilteredPlayers: Dispatch<SetStateAction<Players>>;
     listTypes: { all: string; favorites: string };
+    currentPage: number;
+    totalPages: number;
+    setCurrentPage: Dispatch<SetStateAction<number>>;
 };
 
 const PlayerContext = createContext({} as PlayerContextType);
@@ -28,21 +31,24 @@ export function PlayerProvider({ children }: { children: any }) {
     const [searchText, setSearchText] = useState('');
     const [filteredPlayers, setFilteredPlayers] = useState<Player[]>(allPlayers);
 
-    // Create a debounced function to update the filtered list
-    // const debouncedFilterPlayers = debounce((text: string) => {
-    //     const filtered = allPlayers.filter((player) =>
-    //         player.first_name.toLowerCase().includes(text.toLowerCase())
-    //             ||
-    //         player.last_name.toLowerCase().includes(text.toLowerCase())
-    //     );
-    //     setFilteredPlayers(filtered);
-    // }, 300);
+    // Pagination related state
+    const [currentPage, setCurrentPage ] = useState(1);
+    const [totalPages, setTotalPages] = useState(50);
 
     useEffect(() => {
         const fetchPlayersData = async () => {
             try {
-                const response = await fetch(`${apiURL}/?search=${searchText}`);
+                let response;
+
+                if (searchText.length > 0) {
+                    response = await fetch(`${apiURL}/?search=${searchText}`);
+                } else {
+                    response = await fetch(`${apiURL}/?page=${currentPage}?per_page=${100}`);
+                }
+
                 const result = await response.json();
+                setCurrentPage(result.meta.current_page);
+                setTotalPages(result.meta.total_pages);
                 setFilteredPlayers(result.data)
 
             } catch (e) {
@@ -51,15 +57,7 @@ export function PlayerProvider({ children }: { children: any }) {
         }
 
         fetchPlayersData();
-    }, [searchText]);
-
-    // Update the filteredPlayers when searchText changes
-    // useEffect(() => {
-    //     debouncedFilterPlayers(searchText);
-    //     // // Cleanup the debounce function when component unmounts
-    //     // return () => debouncedFilterPlayers.cancel();
-    // }, [searchText, debouncedFilterPlayers]);
-
+    }, [searchText, currentPage]);
 
     const toggleFavorite = (clickedPlayer: Player) => {
         const alreadyFavorite = find(favoritePlayers, (player) => { return clickedPlayer.id === player.id });
@@ -72,7 +70,7 @@ export function PlayerProvider({ children }: { children: any }) {
     };
 
     return (
-        <PlayerContext.Provider value={{ apiURL, listTypes, allPlayers, favoritePlayers, setAllPlayers, toggleFavorite, searchText, setSearchText, filteredPlayers, setFilteredPlayers }}>
+        <PlayerContext.Provider value={{ apiURL, listTypes, allPlayers, favoritePlayers, setAllPlayers, toggleFavorite, searchText, setSearchText, filteredPlayers, setFilteredPlayers, currentPage, setCurrentPage, totalPages }}>
             {children}
         </PlayerContext.Provider>
     )
