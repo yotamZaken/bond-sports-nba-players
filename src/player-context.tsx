@@ -17,6 +17,8 @@ interface PlayerContextType {
     textColorClass: string;
     generateRandomColor: () => void;
     colorClasses: Array<string>;
+    modalOpen: boolean;
+    setModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 const PlayerContext = createContext({} as PlayerContextType);
@@ -34,6 +36,7 @@ export default function PlayerProvider({ children }: { children: any }) {
 
     const [bgColorClass, setBgColorClass] = useState<string>('#ffffff');
     const [textColorClass, setTextColorClass] = useState<string>('#000000');
+    const [ modalOpen, setModalOpen ] = useState<boolean>(false);
 
     const generateRandomColor = () => {
         const randomNumber = Math.floor(Math.random() * colorClasses.length);
@@ -91,7 +94,9 @@ export default function PlayerProvider({ children }: { children: any }) {
         bgColorClass,
         textColorClass,
         generateRandomColor,
-        colorClasses
+        colorClasses,
+        modalOpen,
+        setModalOpen
     }
 
     return (

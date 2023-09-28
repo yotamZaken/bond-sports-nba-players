@@ -17,21 +17,24 @@ export default function PlayerList({ title, players, isFavoritesList, }: PlayerL
     const { bgColorClass, textColorClass, generateRandomColor } = usePlayerContext();
 
     return (
-        <div className={clsx("border border-1 border-green-950 p-3 rounded", "grid grid-flow-row gap-y-3 p-3 content-start", isFavoritesList && bgColorClass, isFavoritesList && textColorClass)}>
-            <p className="font-bold"> { title } </p>
-             <InputSearch isFavoritesList={isFavoritesList} />
-            { isFavoritesList && (
-                <button onClick={generateRandomColor}  >
+        <div className={clsx("grid grid-flow-row gap-y-3 p-3 content-start min-w-fit",
+                "border border-1 shadow p-3 rounded",
+                isFavoritesList && bgColorClass, isFavoritesList && textColorClass)}
+        >
+            <p className="font-bold justify-self-start">{title}</p>
+            {!isFavoritesList && <InputSearch isFavoritesList={isFavoritesList}/>}
+            {isFavoritesList && (
+                <button onClick={generateRandomColor} className="justify-self-start shadow border border-1 p-2 rounded">
                     Change Background Color
                 </button>
             )}
-            { players.map(player => (
+            {players.map(player => (
                 <PlayerItem
                     player={player}
                     isFavoritesList={isFavoritesList}
                     key={player.id + Math.random().toFixed(2)} />
             ))}
-            { !isFavoritesList &&  <Pagination /> }
+            {!isFavoritesList &&  <Pagination />}
         </div>
     )
 }

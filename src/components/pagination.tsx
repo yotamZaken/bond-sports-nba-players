@@ -11,13 +11,13 @@ export default function Pagination() {
 
     return (
         <div className="grid grid-flow-col justify-between">
-            <button className={ clsx("border border-1 border-purple-400", currentPage === 1 && "text-gray-500") }
-                    onClick={ () => handlePageChange(currentPage - 1) } disabled={ currentPage === 1 }>
+            <button className={clsx("p-3 rounded shadow bg-sky-300 font-bold", currentPage === 1 && "font-normal text-gray-500")}
+                    onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
                 Previous
             </button>
             <button
-                className={clsx("border border-1 border-purple-400", currentPage === totalPages && "text-gray-500")}
-                onClick={ () => handlePageChange(currentPage + 1) } disabled={ currentPage === totalPages }>
+                className={clsx("p-3 rounded shadow bg-sky-300 font-bold", currentPage === totalPages && "font-normal text-gray-500")}
+                onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
                 Next
             </button>
         </div>
