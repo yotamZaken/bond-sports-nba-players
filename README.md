@@ -1,46 +1,46 @@
-# Getting Started with Create React App
+# Bond Sports NBA Players UI Home Assingment
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Introduction
+This README provides an overview of the technical design and architecture of our project. 
+It outlines the services and components used in the application, 
+key technologies, and instructions for setting up and running the project locally.
 
-In the project directory, you can run:
+## Project Overview
+This project fetches NBA players data and renders them in a split list screen.
+The left side is for all players (with pagination, in batches of 100 - the maximum number allowed per request from the API)
 
-### `yarn start`
+[Provide a brief overview of the project, its goals, and its target audience.]
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Components Breakdown
+- ListContainer: a container holding both lists (side to side) and spanning across the entire page.
+- PlayerList: a single component that can be used as both types of lists with conditional rendering.
+- PlayerItem: a list item rendering a player's name and a favorite toggle button.
+- PlayerCard: a modal component, rendering a players details when the player's item has been clicked.
+- InputSearch: an input component allowing an API request for a single player data.
+- Pagination: a simple component holding both pagination buttons and updates, triggering a data fetch on page change.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Key Technologies
+- React (the project is a template of Create React App with TypeScript)
+- TypeScript
+- Context API
+- TailwindCSS
 
-### `yarn test`
+### State
+- The state is managed using the `useContext` hook. A central context file is holding all the relevant state for the various components. 
+I've picked that in order to save prop drilling and allow all components to access whatever pieces of data they need while also being aware to the state of other components
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Pagination
+- I've implemented pagination as a part of the project's context, with a dependency on the `currentPage` state in order to trigger the next page data fetch. 
 
-### `yarn build`
+### Third Party Libraries and Packages:
+- lodash
+- clsx (used for conditional rendering and addition of classes).
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+### In order to run the project:
+- Clone the GitHub repo to your machine via the link you have received by email. 
+- Navigate to the cloned repo directory.
+- Run: `yarn` or `npm install`.
+- Run: `yarn start` or `npm start` to start the project locally.
+- Open the project (if a browser window did not already open) on: [http://localhost:3000].

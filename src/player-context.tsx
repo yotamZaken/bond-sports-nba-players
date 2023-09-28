@@ -59,10 +59,10 @@ export default function PlayerProvider({ children }: { children: any }) {
                 }
 
                 const result = await response.json();
+                
                 setCurrentPage(result.meta.current_page);
                 setTotalPages(result.meta.total_pages);
-                setFilteredPlayers(result.data)
-
+                setFilteredPlayers(result.data);
             } catch (e) {
                 console.error("Failed to fetch players data", e);
             }
